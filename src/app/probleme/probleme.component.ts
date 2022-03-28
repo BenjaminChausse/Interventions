@@ -19,12 +19,43 @@ export class ProblemeComponent implements OnInit {
     this.problemeForm = this.fb.group({
     prenom: ['',[Validators.required, VerifierCaracteresValidator.longueurMinimum(3)]],
     nom: ['',[Validators.required, VerifierCaracteresValidator.longueurMinimum(3)]],
-    noTypeProbleme: ['',[Validators.required]]
+    noTypeProbleme: ['',[Validators.required]],
+    typeProbleme: ['', Validators.required],
+    courrielGroup: this.fb.group({
+      courriel: [{value: '', disabled: true}],
+      courrielConfirmation: [{value: '', disabled: true}],
+    }),
+  telephone: [{value: '', disabled: true}]
     })
     this.typeproblemeService.obtenirTypesProbleme()
     .subscribe(typesProbleme => this.typesProbleme = typesProbleme,
                error => this.errorMessage = <any>error);
   }
+  gestionTelephone(typeTelephone: string): void { 
+    const telephone = this.problemeForm.get('telephone');
+    telephone.clearValidators();
+    telephone.reset();
+    telephone.disable();
+    telephone.updateValueAndValidity();
+    telephone.updateValueAndValidity();
+}
+gestionCourriel(typeCourriel: string): void {
+  const courrielControl = this.problemeForm.get('courrielGroup.courriel');
+  const courrielConfirmationControl = this.problemeForm.get('courrielGroup.courrielConfirmation');
+  const courrielGroupControl = this.problemeForm.get('courrielGroup'); 
+
+  courrielControl.clearValidators();
+  courrielControl.reset();  // Pour enlever les messages d'erreur si le controle contenait des données invaldides
+  courrielControl.disable();
+
+  courrielConfirmationControl.clearValidators();
+  courrielConfirmationControl.reset();
+  courrielConfirmationControl.disable();
+
+  courrielControl.updateValueAndValidity();
+  courrielConfirmationControl.updateValueAndValidity(); 
+
+}
   save(): void {
   }
 
